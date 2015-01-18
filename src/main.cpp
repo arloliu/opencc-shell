@@ -21,6 +21,7 @@
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QTranslator>
+#include <QLocale>
 #include <QStyle>
 #include <QDir>
 

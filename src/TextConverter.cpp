@@ -189,7 +189,10 @@ QString TextConverter::getConfigPath(const QString& config)
     if (QFile::exists(configPath))
         return configPath;
 
-    // TODO: try pre-defined default directory
+    // try pre-defined default directory
+    configPath = QString("%1/%2").arg(OPENCC_OCD_DIR).arg(config);
+    if (QFile::exists(configPath))
+        return configPath;
 
     // return relative path
     return config;

@@ -52,11 +52,6 @@ list(APPEND OPENCC_SHELL_QRC_FILES ${TRANSLATIONS_QRC})
 
 qt_add_resources_wrapper(OPENCC_SHELL_QRC_SRCS ${OPENCC_SHELL_QRC_FILES})
 
-# copy compiled dictonary files to build dir.
-set(OPENCC_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib/OpenCC/data)
-file(GLOB dictFiles ${OPENCC_DATA_DIR}/*.ocd)
-file(INSTALL ${dictFiles} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-
 # Add ececutable target
 add_executable(${PROJECT_NAME}
     ${OPENCC_SHELL_BIN_OPTIONS}
@@ -64,7 +59,23 @@ add_executable(${PROJECT_NAME}
     ${OPENCC_SHELL_QRC_SRCS}
 )
 
-qt5_use_modules(${PROJECT_NAME} Widgets Concurrent)
+if (WITH_QT5)
+    qt5_use_modules(${PROJECT_NAME} Widgets Concurrent)
+endif()
 
 # link against required libraries
 target_link_libraries(${PROJECT_NAME} ${OPENCC_SHELL_LIBS})
+
+# copy compiled dictonary files to build dir.
+add_custom_target(copy-ocd ALL DEPENDS Dictionaries)
+add_dependencies(${PROJECT_NAME} copy-ocd)
+set(OPENCC_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib/OpenCC/data)
+file(GLOB dictFiles ${OPENCC_DATA_DIR}/*.ocd)
+foreach(dictFile ${dictFiles})
+    add_custom_command(TARGET copy-ocd POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E
+        copy ${dictFile} ${CMAKE_CURRENT_BINARY_DIR}
+    )
+    file(RELATIVE_PATH dictName ${OPENCC_DATA_DIR} ${dictFile})
+    message("Install ${dictName}")
+endforeach()

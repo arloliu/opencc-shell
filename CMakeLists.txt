@@ -41,6 +41,7 @@ set(CMAKE_MACOSX_RPATH 1)
 set(OPENCC_SRC_DIR ${CMAKE_SOURCE_DIR}/lib/OpenCC/src)
 set(UCHARDET_SRC_DIR ${CMAKE_SOURCE_DIR}/lib/uchardet/src)
 
+add_definitions(-DOPENCC_OCD_DIR="${CMAKE_INSTALL_PREFIX}/share/opencc")
 # QT settings
 if (WITH_QT5)
     find_package(Qt5Widgets REQUIRED)
