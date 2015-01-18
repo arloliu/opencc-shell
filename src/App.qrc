@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/convert.png</file>
+        <file>res/logo.png</file>
+        <file>res/multiple-files.png</file>
+        <file>res/open.png</file>
+        <file>res/options.png</file>
+        <file>res/single-file.png</file>
+        <file>res/sync.png</file>
+        <file>res/update.png</file>
+        <file>res/add-one.png</file>
+        <file>res/add-all.png</file>
+        <file>res/remove-one.png</file>
+        <file>res/remove-all.png</file>
+        <file>res/remove.png</file>
+        <file>res/text-file.png</file>
+    </qresource>
+    <!-- opencc configurations -->
+    <qresource prefix="/config">
+        <file alias="hk2s.json">../lib/OpenCC/data/config/hk2s.json</file>
+        <file alias="s2hk.json">../lib/OpenCC/data/config/s2hk.json</file>
+        <file alias="s2t.json">../lib/OpenCC/data/config/s2t.json</file>
+        <file alias="s2tw.json">../lib/OpenCC/data/config/s2tw.json</file>
+        <file alias="s2twp.json">../lib/OpenCC/data/config/s2twp.json</file>
+        <file alias="t2s.json">../lib/OpenCC/data/config/t2s.json</file>
+        <file alias="tw2s.json">../lib/OpenCC/data/config/tw2s.json</file>
+        <file alias="tw2sp.json">../lib/OpenCC/data/config/tw2sp.json</file>
+    </qresource>
+    
+</RCC>

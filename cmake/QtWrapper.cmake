@@ -1,0 +1,25 @@
+# some helper macros
+macro(qt_add_resources_wrapper)
+if (WITH_QT5)
+    qt5_add_resources(${ARGN})
+else()
+    qt4_add_resources(${ARGN})
+endif()
+endmacro()
+
+macro(qt_create_translation_wrapper)
+if (WITH_QT5)
+    qt5_create_translation(${ARGN})
+else()
+    qt4_create_translation(${ARGN})
+endif()
+endmacro()
+
+
+macro(qt_add_translation_wrapper)
+if (WITH_QT5)
+    qt5_add_translation(${ARGN})
+else()
+    qt4_add_translation(${ARGN})
+endif()
+endmacro()
