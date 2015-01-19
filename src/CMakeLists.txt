@@ -67,15 +67,13 @@ endif()
 target_link_libraries(${PROJECT_NAME} ${OPENCC_SHELL_LIBS})
 
 # copy compiled dictonary files to build dir.
-add_custom_target(copy-ocd ALL DEPENDS Dictionaries)
-add_dependencies(${PROJECT_NAME} copy-ocd)
 set(OPENCC_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib/OpenCC/data)
 file(GLOB dictFiles ${OPENCC_DATA_DIR}/*.ocd)
 foreach(dictFile ${dictFiles})
-    add_custom_command(TARGET copy-ocd POST_BUILD
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E
         copy ${dictFile} ${CMAKE_CURRENT_BINARY_DIR}
     )
     file(RELATIVE_PATH dictName ${OPENCC_DATA_DIR} ${dictFile})
-    message("Install ${dictName}")
+    message("Install ${dictFile} to ${CMAKE_CURRENT_BINARY_DIR}")
 endforeach()
