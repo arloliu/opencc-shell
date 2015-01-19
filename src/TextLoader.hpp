@@ -24,7 +24,7 @@
 class TextLoader
 {
 public:
-    explicit TextLoader(const QString& fileName);
+    explicit TextLoader(const QString& fileName, const QString& charset = "auto");
     ~TextLoader();
     QString convert(const QString& config, const QString& text);
     QString content();

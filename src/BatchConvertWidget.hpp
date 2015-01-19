@@ -78,6 +78,7 @@ private:
     QPushButton* mSrcDirOpenButton;
     QLineEdit* mSrcDirInfo;
     QComboBox* mSrcDirFilter;
+    QComboBox* mSrcCharsetSelector;
     QDir mSrcDir;
 
     QPushButton* mSetDstDirButton;
@@ -111,6 +112,7 @@ private:
     QElapsedTimer mElapsedTimer;
 
     static TextConverter* mConverter;
+    static QString mSrcCharset;
     static QString mDstCharset;
 
 private slots:
@@ -123,6 +125,7 @@ private slots:
     void addSelectedFiles();
     void previewFile();
     void previewStateChanged(bool checked);
+    void reloadPreviewFile();
     void syncPreviewCursor();
     void syncPreviewScrollBar(int value);
     void convertSettingChanged();

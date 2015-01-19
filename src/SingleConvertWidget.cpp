@@ -53,9 +53,20 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     mSrcFileLineEdit->setMaximumWidth(600);
     mSrcFileLineEdit->setReadOnly(true);
 
+    QLabel* srcCharsetLabel = new QLabel(tr("Encoding:"));
+    mSrcCharsetSelector = new QComboBox();
+    mSrcCharsetSelector->addItem(tr("Auto Detect"), "auto");
+    mSrcCharsetSelector->addItem("UTF-8", "UTF-8");
+    mSrcCharsetSelector->addItem("Big5", "Big5");
+    mSrcCharsetSelector->addItem("GB18030", "GB18030");
+    mSrcCharsetSelector->addItem("GBK", "GBK");
+    mSrcCharsetSelector->addItem("GB2312", "GB2312");
+
     // add widgets to source file layout
     srcFileLayout->addWidget(mLoadFileButton, 0);
     srcFileLayout->addWidget(mSrcFileLineEdit, 20);
+    srcFileLayout->addWidget(srcCharsetLabel);
+    srcFileLayout->addWidget(mSrcCharsetSelector);
     srcFileLayout->addStretch(1);
 
     // create convert setting widget
@@ -116,6 +127,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     this->setLayout(outlineLayout);
 
     QObject::connect(mLoadFileButton, SIGNAL(clicked(bool)), this, SLOT(loadFile()));
+    QObject::connect(mSrcCharsetSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(loadSrcContent()));
     QObject::connect(mConvertFileButton, SIGNAL(clicked(bool)), this, SLOT(convertFile()));
     QObject::connect(mConvertSettings, SIGNAL(settingChanged()), this, SLOT(convertSettingChanged()));
     QObject::connect(mPreviewCheckBox, SIGNAL(toggled(bool)), this, SLOT(previewStateChanged(bool)));
@@ -178,19 +190,25 @@ void SingleConvertWidget::loadFile()
     if (!dialog.exec())
         return;
 
-    mSrcFile = dialog.selectedFiles().at(0);
+    QFileInfo srcFileInfo(dialog.selectedFiles().at(0));
+    mSrcFile = srcFileInfo.canonicalFilePath();
     mSrcFileLineEdit->setText(mSrcFile);
     mStatusBar->showMessage(tr("%1 loaded").arg(mSrcFile));
 
-    QFileInfo srcFileInfo(mSrcFile);
     mSettings.setValue("SingleMode/LoadDirectory", srcFileInfo.canonicalPath());
 
-    TextLoader loader(mSrcFile);
+    this->loadSrcContent();
+}
+
+void SingleConvertWidget::loadSrcContent()
+{
+    QString srcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
+    TextLoader loader(mSrcFile, srcCharset);
     mSrcContent = loader.content();
-    mSrcCharset = loader.charset();
+    srcCharset = loader.charset();
     mSrcTextEdit->setPlainText(mSrcContent);
 
-    QLocale::Country langType = TextConverter::getLocaleCountry(mSrcContent, mSrcCharset);
+    QLocale::Country langType = TextConverter::getLocaleCountry(mSrcContent, srcCharset);
     QString previousMethod = mConvertSettings->getMethod();
     QString currentMethod;
 

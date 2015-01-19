@@ -22,7 +22,7 @@
 #include <QTextStream>
 #include <QTextCodec>
 
-TextLoader::TextLoader(const QString& fileName):
+TextLoader::TextLoader(const QString& fileName, const QString& charset):
     mContent(), mCharset("UTF-8")
 {
     QFile file(fileName);
@@ -34,9 +34,15 @@ TextLoader::TextLoader(const QString& fileName):
     QByteArray buffer = file.readAll();
     file.close();
 
-    CharsetDetector detector;
-    mCharset = detector.detect(buffer);
-
+    if (charset.toUpper() == "AUTO")
+    {
+        CharsetDetector detector;
+        mCharset = detector.detect(buffer);
+    }
+    else
+    {
+        mCharset = charset;
+    }
 
     QTextStream stream(buffer);
     QTextCodec* codec = QTextCodec::codecForName(mCharset.toUtf8());

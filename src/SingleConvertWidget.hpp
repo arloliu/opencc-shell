@@ -52,6 +52,7 @@ private:
 
     QPushButton* mLoadFileButton;
     QLineEdit* mSrcFileLineEdit;
+    QComboBox* mSrcCharsetSelector;
 
     ConvertSettingWidget* mConvertSettings;
 
@@ -69,7 +70,6 @@ private:
 
     QString mSrcFile;
     QString mSrcContent;
-    QString mSrcCharset;
 
     QString mDstFile;
     QString mDstContent;
@@ -78,6 +78,7 @@ private:
 
 private slots:
     void loadFile();
+    void loadSrcContent();
     void convertFile();
     void convertSettingChanged();
     void previewStateChanged(bool checked);

@@ -46,6 +46,7 @@
 
 // private static instance
 TextConverter* BatchConvertWidget::mConverter = 0;
+QString BatchConvertWidget::mSrcCharset = "auto";
 QString BatchConvertWidget::mDstCharset = QString();
 
 BatchConvertWidget::BatchConvertWidget(QStatusBar* statusBar, QWidget* parent):
@@ -79,7 +80,7 @@ BatchConvertWidget::~BatchConvertWidget()
 bool BatchConvertWidget::batchConvert(const ConvertTask& task)
 {
     // load file content;
-    TextLoader loader(task.first);
+    TextLoader loader(task.first, mSrcCharset);
     QString srcContent = loader.content();
 
     // convert source content to mDstContent
@@ -133,11 +134,20 @@ void BatchConvertWidget::createFolderComponents()
     mSrcDirInfo->setText(mSettings.value("BatchMode/SourceDirectory").toString());
 
     QLabel* srcDirFilterLabel = new QLabel(tr("Filter:"));
-
     mSrcDirFilter = new QComboBox();
     mSrcDirFilter->addItem(tr("Any Files"), "*");
     mSrcDirFilter->addItem(tr("Text files (*.txt)"), "*.txt");
     mSrcDirFilter->addItem(tr("HTML files (*.html *.htm *.xhtml)"), "*.html *.htm *.xhtml");
+    mSrcDirFilter->setMaximumWidth(120);
+
+    QLabel* srcCharsetLabel = new QLabel(tr("Encoding:"));
+    mSrcCharsetSelector = new QComboBox();
+    mSrcCharsetSelector->addItem(tr("Auto Detect"), "auto");
+    mSrcCharsetSelector->addItem("UTF-8", "UTF-8");
+    mSrcCharsetSelector->addItem("Big5", "Big5");
+    mSrcCharsetSelector->addItem("GB18030", "GB18030");
+    mSrcCharsetSelector->addItem("GBK", "GBK");
+    mSrcCharsetSelector->addItem("GB2312", "GB2312");
 
     mSrcDir.setFilter(QDir::Files);
     mSrcDir.setSorting(QDir::Name);
@@ -145,6 +155,8 @@ void BatchConvertWidget::createFolderComponents()
     srcDirLayout->addWidget(srcDirLabel);
     srcDirLayout->addWidget(mSrcDirOpenButton);
     srcDirLayout->addWidget(mSrcDirInfo, 20);
+    srcDirLayout->addWidget(srcCharsetLabel);
+    srcDirLayout->addWidget(mSrcCharsetSelector);
     srcDirLayout->addWidget(srcDirFilterLabel);
     srcDirLayout->addWidget(mSrcDirFilter);
     srcDirLayout->addStretch(1);
@@ -175,6 +187,7 @@ void BatchConvertWidget::createFolderComponents()
     mOutlineLayout->addLayout(dstDirLayout);
 
     QObject::connect(mSrcDirOpenButton, SIGNAL(clicked(bool)), this, SLOT(openSrcDir()));
+    QObject::connect(mSrcCharsetSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(reloadPreviewFile()));
     QObject::connect(mSrcDirFilter, SIGNAL(currentIndexChanged(int)), this, SLOT(updateSrcFileList()));
     QObject::connect(mSrcDirInfo, SIGNAL(returnPressed()), this, SLOT(updateSrcDir()));
 
@@ -527,7 +540,8 @@ void BatchConvertWidget::previewFile()
         return;
     mSrcPreviewFile = srcFile;
 
-    TextLoader loader(mSrcPreviewFile);
+    QString srcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
+    TextLoader loader(mSrcPreviewFile, srcCharset);
     mSrcPreviewContent = loader.content();
     mSrcPreviewTextEdit->setPlainText(mSrcPreviewContent);
 
@@ -538,6 +552,18 @@ void BatchConvertWidget::previewStateChanged(bool checked)
 {
     mSettings.setValue("BatchMode/PreviewState", checked);
     this->previewFile();
+}
+
+void BatchConvertWidget::reloadPreviewFile()
+{
+    if (mSrcPreviewFile.isEmpty())
+        return;
+    QString srcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
+    TextLoader loader(mSrcPreviewFile, srcCharset);
+    mSrcPreviewContent = loader.content();
+    mSrcPreviewTextEdit->setPlainText(mSrcPreviewContent);
+
+    this->convertPreviewContent();
 }
 
 void BatchConvertWidget::syncPreviewCursor()
@@ -582,7 +608,8 @@ void BatchConvertWidget::convertFiles()
         delete mConverter;
     mConverter = new TextConverter(mConvertSettings->getOption());
 
-    // save dest. charset
+    // save src & dest. charset
+    mSrcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
     mDstCharset = mConvertSettings->getCharset();
 
     // fill convert task list for batch conversion
