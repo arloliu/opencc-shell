@@ -33,6 +33,7 @@
 #include <QPushButton>
 #include <QComboBox>
 #include <QPlainTextEdit>
+#include <QTextCursor>
 #include <QScrollBar>
 #include <QFileInfo>
 #include <QFileDialog>
@@ -72,18 +73,26 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     // create convert setting widget
     mConvertSettings = new ConvertSettingWidget();
 
-    // create src. widgets
-    QLabel* srcContentLabel = new QLabel(tr("Original Content:"));
+    // create preview option widgets
+    QHBoxLayout* previewOptionLayout = new QHBoxLayout();
     mPreviewCheckBox = new QCheckBox(tr("Preview Converted Result"));
     bool previewState = mSettings.value("SingleMode/PreviewState", true).toBool();
     mPreviewCheckBox->setChecked(previewState);
+    mRefreshPreviewButton = new QPushButton(QIcon(":/res/update.png"), tr("&Refresh Converted Result"));
+
+    previewOptionLayout->addWidget(mPreviewCheckBox);
+    previewOptionLayout->addWidget(mRefreshPreviewButton);
+    previewOptionLayout->addStretch(1);
+
+    // create src. widgets
+    QLabel* srcContentLabel = new QLabel(tr("Original Content:"));
 
     mSrcTextEdit = new QPlainTextEdit();
+    mSrcTextEdit->setCenterOnScroll(false);
     mSrcScrollBar = mSrcTextEdit->verticalScrollBar();
 
     QHBoxLayout* srcOptionLayout = new QHBoxLayout();
     srcOptionLayout->addWidget(srcContentLabel);
-    srcOptionLayout->addWidget(mPreviewCheckBox);
     srcOptionLayout->addStretch(1);
 
     // create src. layout and add widgets to it
@@ -93,6 +102,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
     // create dest. widgets
     mDstTextEdit = new QPlainTextEdit();
+    mDstTextEdit->setCenterOnScroll(false);
     mDstScrollBar = mDstTextEdit->verticalScrollBar();
     QLabel* dstContentLabel = new QLabel(tr("Converted Content:"));
 
@@ -122,12 +132,14 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     // add tool/main/action layouts to outline layout
     outlineLayout->addLayout(srcFileLayout);
     outlineLayout->addWidget(mConvertSettings);
+    outlineLayout->addLayout(previewOptionLayout);
     outlineLayout->addLayout(mainLayout);
     outlineLayout->addLayout(actionLayout);
     this->setLayout(outlineLayout);
 
     QObject::connect(mLoadFileButton, SIGNAL(clicked(bool)), this, SLOT(loadFile()));
     QObject::connect(mSrcCharsetSelector, SIGNAL(currentIndexChanged(int)), this, SLOT(loadSrcContent()));
+    QObject::connect(mRefreshPreviewButton, SIGNAL(clicked(bool)), this, SLOT(refreshPreview()));
     QObject::connect(mConvertFileButton, SIGNAL(clicked(bool)), this, SLOT(convertFile()));
     QObject::connect(mConvertSettings, SIGNAL(settingChanged()), this, SLOT(convertSettingChanged()));
     QObject::connect(mPreviewCheckBox, SIGNAL(toggled(bool)), this, SLOT(previewStateChanged(bool)));
@@ -136,6 +148,9 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
     // post processing
     previewStateChanged(mPreviewCheckBox->isChecked());
+
+    // store srouce content changed
+    QObject::connect(mSrcTextEdit, SIGNAL(textChanged()), this, SLOT(updateSrcContent()));
 
     // sync src & dst scrollbar
     QObject::connect(mSrcScrollBar, SIGNAL(valueChanged(int)), this, SLOT(syncTextEditScrollBar(int)));
@@ -225,8 +240,29 @@ void SingleConvertWidget::loadSrcContent()
     }
 }
 
+void SingleConvertWidget::updateSrcContent()
+{
+    mSrcContent = mSrcTextEdit->toPlainText();
+}
+
+void SingleConvertWidget::refreshPreview()
+{
+    QTextCursor srcTextCursor = mSrcTextEdit->textCursor();
+    QTextCursor dstTextCursor = mDstTextEdit->textCursor();
+
+    this->updateSrcContent();
+    this->previewConvertResult();
+
+    dstTextCursor.setPosition(srcTextCursor.position());
+    mDstTextEdit->setTextCursor(dstTextCursor);
+
+    mSrcTextEdit->centerCursor();
+    mDstTextEdit->centerCursor();
+}
+
 void SingleConvertWidget::convertFile()
 {
+    this->updateSrcContent();
     if (mSrcContent.isEmpty())
         return;
 
@@ -307,6 +343,7 @@ void SingleConvertWidget::previewStateChanged(bool checked)
     }
     mSettings.setValue("SingleMode/PreviewState", checked);
 
+    mRefreshPreviewButton->setVisible(checked);
     this->setDestContentVisible(checked);
 }
 
@@ -317,10 +354,20 @@ void SingleConvertWidget::overwriteModeChanged(bool checked)
 
 void SingleConvertWidget::syncTextEditCursor()
 {
+    QTextCursor srcTextCursor = mSrcTextEdit->textCursor();
+    QTextCursor dstTextCursor = mDstTextEdit->textCursor();
     if ((void*)(this->sender()) == (void*)mSrcTextEdit)
-        mDstScrollBar->setValue(mSrcScrollBar->value());
+    {
+        dstTextCursor.setPosition(srcTextCursor.position());
+        mDstTextEdit->setTextCursor(dstTextCursor);
+    }
     else
-        mSrcScrollBar->setValue(mDstScrollBar->value());
+    {
+        srcTextCursor.setPosition(dstTextCursor.position());
+        mSrcTextEdit->setTextCursor(srcTextCursor);
+    }
+    mSrcTextEdit->centerCursor();
+    mDstTextEdit->centerCursor();
 }
 
 void SingleConvertWidget::syncTextEditScrollBar(int value)

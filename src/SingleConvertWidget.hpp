@@ -58,6 +58,7 @@ private:
 
     QVBoxLayout* mSrcContentLayout;
     QCheckBox* mPreviewCheckBox;
+    QPushButton* mRefreshPreviewButton;
     QPlainTextEdit* mSrcTextEdit;
     QScrollBar* mSrcScrollBar;
 
@@ -79,6 +80,8 @@ private:
 private slots:
     void loadFile();
     void loadSrcContent();
+    void updateSrcContent();
+    void refreshPreview();
     void convertFile();
     void convertSettingChanged();
     void previewStateChanged(bool checked);
