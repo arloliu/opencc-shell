@@ -255,6 +255,8 @@ void BatchConvertWidget::createPreviewComponents()
 
     mSrcPreviewTextEdit = new QPlainTextEdit();
     mDstPreviewTextEdit = new QPlainTextEdit();
+    mSrcPreviewTextEdit->setAcceptDrops(false);
+    mDstPreviewTextEdit->setAcceptDrops(false);
 
     mSrcPreviewScrollBar = mSrcPreviewTextEdit->verticalScrollBar();
     mDstPreviewScrollBar = mDstPreviewTextEdit->verticalScrollBar();

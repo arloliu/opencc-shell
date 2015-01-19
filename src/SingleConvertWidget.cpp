@@ -37,10 +37,17 @@
 #include <QScrollBar>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QUrl>
 
 SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent = 0):
     QWidget(parent), mStatusBar(statusBar)
 {
+    // accept drag & drop action
+    this->setAcceptDrops(true);
+
     QVBoxLayout* outlineLayout = new QVBoxLayout();
     QHBoxLayout* srcFileLayout = new QHBoxLayout();
     QHBoxLayout* mainLayout = new QHBoxLayout();
@@ -89,6 +96,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
     mSrcTextEdit = new QPlainTextEdit();
     mSrcTextEdit->setCenterOnScroll(false);
+    mSrcTextEdit->setAcceptDrops(false);
     mSrcScrollBar = mSrcTextEdit->verticalScrollBar();
 
     QHBoxLayout* srcOptionLayout = new QHBoxLayout();
@@ -103,6 +111,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     // create dest. widgets
     mDstTextEdit = new QPlainTextEdit();
     mDstTextEdit->setCenterOnScroll(false);
+    mDstTextEdit->setAcceptDrops(false);
     mDstScrollBar = mDstTextEdit->verticalScrollBar();
     QLabel* dstContentLabel = new QLabel(tr("Converted Content:"));
 
@@ -208,17 +217,27 @@ void SingleConvertWidget::loadFile()
     QFileInfo srcFileInfo(dialog.selectedFiles().at(0));
     mSrcFile = srcFileInfo.canonicalFilePath();
     mSrcFileLineEdit->setText(mSrcFile);
-    mStatusBar->showMessage(tr("%1 loaded").arg(mSrcFile));
 
-    mSettings.setValue("SingleMode/LoadDirectory", srcFileInfo.canonicalPath());
 
-    this->loadSrcContent();
+    if (this->loadSrcContent())
+    {
+        mStatusBar->showMessage(tr("%1 loaded").arg(mSrcFile));
+        mSettings.setValue("SingleMode/LoadDirectory", srcFileInfo.canonicalPath());
+    }
 }
 
-void SingleConvertWidget::loadSrcContent()
+bool SingleConvertWidget::loadSrcContent()
 {
     QString srcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
     TextLoader loader(mSrcFile, srcCharset);
+    if (!loader.valid())
+    {
+        mSrcFile = QString();
+        mSrcContent= QString();
+        mSrcFileLineEdit->setText("");
+        return false;
+    }
+
     mSrcContent = loader.content();
     srcCharset = loader.charset();
     mSrcTextEdit->setPlainText(mSrcContent);
@@ -238,6 +257,7 @@ void SingleConvertWidget::loadSrcContent()
     {
         this->convertSettingChanged();
     }
+    return true;
 }
 
 void SingleConvertWidget::updateSrcContent()
@@ -377,4 +397,32 @@ void SingleConvertWidget::syncTextEditScrollBar(int value)
         mDstScrollBar->setValue(value);
     else
         mSrcScrollBar->setValue(value);
+}
+
+void SingleConvertWidget::dragEnterEvent(QDragEnterEvent* event)
+{
+    const QMimeData* mimeData = event->mimeData();
+    if (mimeData->hasUrls())
+    {
+        event->acceptProposedAction();
+    }
+}
+
+
+void SingleConvertWidget::dropEvent(QDropEvent* event)
+{
+    const QMimeData* mimeData = event->mimeData();
+    QList<QUrl> urlList = mimeData->urls();
+    QString filePath = urlList.at(0).toLocalFile();
+
+    QFileInfo srcFileInfo(filePath);
+    mSrcFile = srcFileInfo.canonicalFilePath();
+    mSrcFileLineEdit->setText(mSrcFile);
+
+
+    if (this->loadSrcContent())
+    {
+        mStatusBar->showMessage(tr("%1 loaded").arg(mSrcFile));
+        mSettings.setValue("SingleMode/LoadDirectory", srcFileInfo.canonicalPath());
+    }
 }

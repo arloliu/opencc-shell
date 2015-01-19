@@ -77,9 +77,13 @@ private:
 
     qint64 mConvertElapsedMsec;
 
+protected:
+    void dragEnterEvent(QDragEnterEvent* event);
+    void dropEvent(QDropEvent* event);
+
 private slots:
     void loadFile();
-    void loadSrcContent();
+    bool loadSrcContent();
     void updateSrcContent();
     void refreshPreview();
     void convertFile();

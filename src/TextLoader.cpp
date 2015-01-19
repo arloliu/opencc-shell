@@ -21,10 +21,23 @@
 #include <QFile>
 #include <QTextStream>
 #include <QTextCodec>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QMimeDatabase>
+#include <QMimeType>
+#endif
 
 TextLoader::TextLoader(const QString& fileName, const QString& charset):
-    mContent(), mCharset("UTF-8")
+    mValid(false), mContent(), mCharset()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+    QMimeDatabase db;
+    QString type = db.mimeTypeForFile(fileName).name();
+    if (type.contains("executable") || type.contains("octet-stream") || type.contains("compressed"))
+        return;
+    if (!type.contains("text") && !type.contains("html") && !type.contains("xml"))
+        return;
+#endif
+
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly))
     {
@@ -49,6 +62,7 @@ TextLoader::TextLoader(const QString& fileName, const QString& charset):
     stream.setCodec(codec);
     mCharset = codec->name();
     mContent = stream.readAll();
+    mValid = true;
 }
 
 TextLoader::~TextLoader()
@@ -63,4 +77,9 @@ QString TextLoader::content()
 QString TextLoader::charset()
 {
     return mCharset;
+}
+
+bool TextLoader::valid()
+{
+    return mValid;
 }

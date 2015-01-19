@@ -29,8 +29,9 @@ public:
     QString convert(const QString& config, const QString& text);
     QString content();
     QString charset();
-
+    bool valid();
 private:
+    bool mValid;
     QString mContent;
     QString mCharset;
 
