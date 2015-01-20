@@ -101,6 +101,7 @@ void FileListWidget::addFile(const QString& path)
             QTableWidgetItem::UserType
         );
         actionItem->setData(Qt::UserRole, file.filePath());
+        actionItem->setToolTip(tr("Remove %1").arg(file.fileName()));
         this->setItem(row, 1, actionItem);
     }
 }

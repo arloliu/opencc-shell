@@ -92,9 +92,7 @@ private:
     FileListWidget* mDstFileList;
 
     QPushButton* mAddSelected;
-    QPushButton* mAddAll;
     QPushButton* mRemoveSelected;
-    QPushButton* mRemoveAll;
 
     QGroupBox* mPreviewContent;
     QPlainTextEdit* mSrcPreviewTextEdit;

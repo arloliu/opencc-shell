@@ -142,6 +142,7 @@ void BatchConvertWidget::createFolderComponents()
 
     QLabel* srcCharsetLabel = new QLabel(tr("Encoding:"));
     mSrcCharsetSelector = new QComboBox();
+    mSrcCharsetSelector->setToolTip(tr("Select source encoding, choose 'Auto Detect' if you don't know the encoding of source file"));
     mSrcCharsetSelector->addItem(tr("Auto Detect"), "auto");
     mSrcCharsetSelector->addItem("UTF-8", "UTF-8");
     mSrcCharsetSelector->addItem("Big5", "Big5");
@@ -176,6 +177,7 @@ void BatchConvertWidget::createFolderComponents()
     mDstDirInfo->setText(mSettings.value("BatchMode/DestinationDirectory").toString());
 
     mSetDstAsSrcButton = new QPushButton(QIcon(":/res/update.png"), QString());
+    mSetDstAsSrcButton->setToolTip(tr("Set destination folder to the same as source folder"));
 
     dstDirLayout->addWidget(dstDirLabel);
     dstDirLayout->addWidget(mSetDstDirButton);
@@ -214,21 +216,17 @@ void BatchConvertWidget::createAssignComponents()
 
     QVBoxLayout* assignButtonLayout = new QVBoxLayout();
     mAddSelected = new QPushButton(QIcon(":/res/add-one.png"), tr("Add"));
-    mAddAll = new QPushButton(QIcon(":/res/add-all.png"), tr("Add All"));
+    mAddSelected->setToolTip(tr("Add selected files"));
     mRemoveSelected = new QPushButton(QIcon(":/res/remove-one.png"), tr("Remove"));
-    mRemoveAll = new QPushButton(QIcon(":/res/remove-all.png"), tr("Remove All"));
+    mRemoveSelected->setToolTip(tr("Remove selected files"));
 
     QString assignButtonStyle = "QPushButton {text-align: left; padding: 4px 8px; outline: none;} ";
     mAddSelected->setStyleSheet(assignButtonStyle);
-    mAddAll->setStyleSheet(assignButtonStyle);
     mRemoveSelected->setStyleSheet(assignButtonStyle);
-    mRemoveAll->setStyleSheet(assignButtonStyle);
 
     assignButtonLayout->addSpacing(24);
     assignButtonLayout->addWidget(mAddSelected);
-    //assignButtonLayout->addWidget(mAddAll);
     assignButtonLayout->addWidget(mRemoveSelected);
-    //assignButtonLayout->addWidget(mRemoveAll);
     assignButtonLayout->addStretch(1);
 
     assignLayout->addWidget(mSrcDirFileList);
@@ -489,6 +487,7 @@ void BatchConvertWidget::updateSrcFileList()
             QTableWidgetItem::UserType
         );
         item->setData(Qt::UserRole, file.canonicalFilePath());
+        item->setToolTip(file.canonicalFilePath());
         mSrcDirFileList->setItem(row, 0, item);
 
         ++row;

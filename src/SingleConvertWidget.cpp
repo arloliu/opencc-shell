@@ -56,6 +56,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
     // create source file components
     mLoadFileButton = new QPushButton(QIcon(":/res/open.png"), tr("&Open"));
+    mLoadFileButton->setToolTip(tr("Open a file which you want to convert"));
     mSrcFileLineEdit = new QLineEdit();
     mSrcFileLineEdit->setMaxLength(255);
     mSrcFileLineEdit->setMaximumWidth(600);
@@ -63,6 +64,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
     QLabel* srcCharsetLabel = new QLabel(tr("Encoding:"));
     mSrcCharsetSelector = new QComboBox();
+    mSrcCharsetSelector->setToolTip(tr("Select source encoding, choose 'Auto Detect' if you don't know the encoding of source file"));
     mSrcCharsetSelector->addItem(tr("Auto Detect"), "auto");
     mSrcCharsetSelector->addItem("UTF-8", "UTF-8");
     mSrcCharsetSelector->addItem("Big5", "Big5");
@@ -86,6 +88,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     bool previewState = mSettings.value("SingleMode/PreviewState", true).toBool();
     mPreviewCheckBox->setChecked(previewState);
     mRefreshPreviewButton = new QPushButton(QIcon(":/res/update.png"), tr("&Refresh Converted Result"));
+    mRefreshPreviewButton->setToolTip(tr("Click it to refresh the converted content when the original content has been modified"));
 
     previewOptionLayout->addWidget(mPreviewCheckBox);
     previewOptionLayout->addWidget(mRefreshPreviewButton);
@@ -131,6 +134,7 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     mConvertFileButton->setStyleSheet("QPushButton {font-size: 16px; font-weight: bold;}");
     mOverwriteCheckBox = new QCheckBox(tr("Overwrite Original File"));
     mOverwriteCheckBox->setChecked(mSettings.value("SingleMode/OverwriteMode", false).toBool());
+    mOverwriteCheckBox->setToolTip(tr("Save converted content to the same file, and overwrite it automatically"));
 
     // add action components to action layout
     actionLayout->addStretch(1);

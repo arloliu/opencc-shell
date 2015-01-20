@@ -31,12 +31,15 @@ ConvertSettingWidget::ConvertSettingWidget(QWidget* parent):
     mConvertMethod = new QComboBox();
     mConvertMethod->addItem(tr("Simplified to Traditional"), "s2t");
     mConvertMethod->addItem(tr("Traditional to Simplified"), "t2s");
+    mConvertMethod->setToolTip(tr("Choose conversion direction"));
 
     QLabel* convertOptionLabel = new QLabel(tr("Option:"));
     mConvertOption = new QComboBox();
+    mConvertOption->setToolTip(tr("Choose conversion option"));
 
     QLabel* convertEncodingLabel = new QLabel(tr("Encoding:"));
     mConvertCharset = new QComboBox();
+    mConvertCharset->setToolTip(tr("Choose conversion encoding"));
 
     this->updateOptions();
 
@@ -49,7 +52,7 @@ ConvertSettingWidget::ConvertSettingWidget(QWidget* parent):
     layout->addWidget(convertEncodingLabel);
     layout->addWidget(mConvertCharset);
     layout->addStretch(1);
-    
+
     this->setLayout(layout);
 
     QObject::connect(mConvertMethod, SIGNAL(currentIndexChanged(int)), this, SLOT(methodChanged(int)));
@@ -58,7 +61,7 @@ ConvertSettingWidget::ConvertSettingWidget(QWidget* parent):
 
 ConvertSettingWidget::~ConvertSettingWidget()
 {
-    
+
 }
 QString ConvertSettingWidget::getMethod()
 {
@@ -90,9 +93,13 @@ void ConvertSettingWidget::updateOptions()
     if (method == "s2t")
     {
         mConvertOption->addItem(tr("Standard"), ":/config/s2t.json");
+        mConvertOption->setItemData(0, tr("Simplified Chinese to Traditional Chinese"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Taiwan Standard"), ":/config/s2tw.json");
+        mConvertOption->setItemData(1, tr("Simplified Chinese to Traditional Chinese (Taiwan Standard)"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Taiwan Standard with Taiwanese Idiom"), ":/config/s2twp.json");
+        mConvertOption->setItemData(2, tr("Simplified Chinese to Traditional Chinese (Taiwan Standard) with Taiwanese idiom"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Hong Kong Standard"), ":/config/s2hk.json");
+        mConvertOption->setItemData(3, tr("Simplified Chinese to Traditional Chinese (Hong Kong Standard)"), Qt::ToolTipRole);
 
         QStringList charsetList = TextConverter::getCharsetList(QLocale::Taiwan);
         Q_FOREACH(const QString& charset, charsetList)
@@ -103,9 +110,13 @@ void ConvertSettingWidget::updateOptions()
     else
     {
         mConvertOption->addItem(tr("Standard"), ":/config/t2s.json");
+        mConvertOption->setItemData(0, tr("Traditional Chinese to Simplified Chinese"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Taiwan Standard to Simplified Chinese"), ":/config/tw2s.json");
+        mConvertOption->setItemData(1, tr("Traditional Chinese (Taiwan Standard) to Simplified Chinese"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Taiwan Standard to Mainland Chinese Idiom"), ":/config/tw2sp.json");
+        mConvertOption->setItemData(2, tr("Traditional Chinese (Taiwan Standard) to Simplified Chinese with Mainland Chinese idiom"), Qt::ToolTipRole);
         mConvertOption->addItem(tr("Hong Kong Standard to Simplified Chinese"), ":/config/hk2s.json");
+        mConvertOption->setItemData(3, tr("Traditional Chinese (Hong Kong Standard) to Simplified Chinese"), Qt::ToolTipRole);
 
         QStringList charsetList = TextConverter::getCharsetList(QLocale::China);
         Q_FOREACH(const QString& charset, charsetList)
