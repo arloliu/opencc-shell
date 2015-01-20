@@ -133,20 +133,3 @@ foreach(DICT ${DICTS})
         "${DICT_GENERATED_DIR}/${DICT}.ocd"
   )
 endforeach(DICT)
-
-set(CONFIG_FILES
-  config/s2t.json
-  config/t2s.json
-  config/s2tw.json
-  config/s2twp.json
-  config/tw2s.json
-  config/s2hk.json
-  config/hk2s.json
-)
-
-install(
-  FILES
-    ${CONFIG_FILES}
-  DESTINATION
-    ${DIR_SHARE_OPENCC}
-)

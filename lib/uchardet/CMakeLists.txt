@@ -65,13 +65,6 @@ configure_file(
 	@ONLY
 )
 
-install(
-	FILES
-		${CMAKE_BINARY_DIR}/uchardet.pc
-	DESTINATION
-		${DIR_LIBRARY}/pkgconfig
-)
-
 ######## Subdirectories
 
 add_subdirectory(src)

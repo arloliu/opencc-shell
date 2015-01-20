@@ -78,29 +78,4 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
 	)
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-if (NOT WIN32)
-install(
-	TARGETS
-		${UCHARDET_TARGET}
-	LIBRARY DESTINATION
-		${DIR_LIBRARY}
-)
-endif (NOT WIN32)
-
-install(
-	TARGETS
-		${UCHARDET_STATIC_TARGET}
-	ARCHIVE DESTINATION
-		${DIR_LIBRARY_STATIC}
-)
-
-install(
-	FILES
-		${UCHARDET_HEADERS}
-	DESTINATION
-		${DIR_INCLUDE}/uchardet
-)
-
 include(symbols.cmake)
-
-add_subdirectory(tools)

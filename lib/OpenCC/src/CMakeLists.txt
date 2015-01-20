@@ -85,29 +85,6 @@ if (CMAKE_BUILD_TYPE MATCHES Debug)
   )
 endif (CMAKE_BUILD_TYPE MATCHES Debug)
 
-install(
-  TARGETS
-    libopencc
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib/static
-)
-
-install(
-  FILES
-    ${LIBOPENCC_HEADERS}
-  DESTINATION
-    ${DIR_INCLUDE}/opencc
-)
-
-add_executable(
-  opencc
-  CommandLine.cpp
-)
-target_link_libraries(
-  opencc
-  libopencc
-)
-
 add_executable(
   opencc_dict
   DictConverter.cpp
@@ -115,11 +92,4 @@ add_executable(
 target_link_libraries(
   opencc_dict
   libopencc
-)
-
-install(
-  TARGETS
-    opencc
-    opencc_dict
-  RUNTIME DESTINATION bin
 )

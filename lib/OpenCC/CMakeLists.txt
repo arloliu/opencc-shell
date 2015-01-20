@@ -84,21 +84,6 @@ endif (DEFINED SYSCONF_INSTALL_DIR)
 set (DIR_SHARE_OPENCC ${DIR_SHARE}opencc/)
 set (DIR_SHARE_LOCALE ${DIR_SHARE}locale/)
 
-######## Configuration
-
-configure_file(
-  opencc.pc.in
-  opencc.pc
-  @ONLY
-)
-
-install(
-  FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/opencc.pc
-  DESTINATION
-    ${DIR_LIBRARY}/pkgconfig
-)
-
 ######## Compiler flags
 
 add_definitions(

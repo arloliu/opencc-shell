@@ -66,6 +66,8 @@ endif()
 # link against required libraries
 target_link_libraries(${PROJECT_NAME} ${OPENCC_SHELL_LIBS})
 
+install(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
+
 # copy compiled dictonary files to build dir.
 set(OPENCC_DATA_DIR ${CMAKE_CURRENT_BINARY_DIR}/../lib/OpenCC/data)
 file(GLOB dictFiles ${OPENCC_DATA_DIR}/*.ocd)
