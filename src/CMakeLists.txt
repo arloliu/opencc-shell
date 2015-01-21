@@ -8,12 +8,6 @@ if (CMAKE_BUILD_TYPE MATCHES Release)
     endif()
 endif()
 
-# set windows icon
-if (WIN32)
-    set(OPENCC_SHELL_SRCS ${OPENCC_SHELL_SRCS} App.rc)
-    add_definitions(-DOpencc_BUILT_AS_STATIC)
-endif ()
-
 set(OPENCC_SHELL_SRCS
     main.cpp
     CharsetDetector.cpp
@@ -33,6 +27,14 @@ set(OPENCC_SHELL_LIBS
 )
 
 include_directories(${OPENCC_SRC_DIR} ${UCHARDET_SRC_DIR})
+
+
+if (WIN32)
+	# set windows icon
+    set(OPENCC_SHELL_SRCS ${OPENCC_SHELL_SRCS} App.rc)
+    message("CMAKE_RC_FLAGS: ${CMAKE_RC_FLAGS}")
+    add_definitions(-DOpencc_BUILT_AS_STATIC)
+endif ()
 
 
 # Embed translataions into binary
