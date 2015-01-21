@@ -19,7 +19,6 @@
 #include "TextLoader.hpp"
 #include "CharsetDetector.hpp"
 #include <QFile>
-#include <QTextStream>
 #include <QTextCodec>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
 #include <QMimeDatabase>
@@ -57,11 +56,28 @@ TextLoader::TextLoader(const QString& fileName, const QString& charset):
         mCharset = charset;
     }
 
-    QTextStream stream(buffer);
     QTextCodec* codec = QTextCodec::codecForName(mCharset.toUtf8());
-    stream.setCodec(codec);
     mCharset = codec->name();
-    mContent = stream.readAll();
+    mContent = codec->toUnicode(buffer);
+    mValid = true;
+}
+
+TextLoader::TextLoader(const QByteArray& text, const QString& charset):
+    mValid(false), mContent(), mCharset()
+{
+    if (charset.toUpper() == "AUTO")
+    {
+        CharsetDetector detector;
+        mCharset = detector.detect(text);
+    }
+    else
+    {
+        mCharset = charset;
+    }
+
+    QTextCodec* codec = QTextCodec::codecForName(mCharset.toUtf8());
+    mCharset = codec->name();
+    mContent = codec->toUnicode(text);
     mValid = true;
 }
 

@@ -23,6 +23,7 @@
 #include "TextConverter.hpp"
 #include <QMap>
 #include <QElapsedTimer>
+#include <QApplication>
 #include <QStatusBar>
 #include <QVBoxLayout>
 #include <QHBoxLayout>
@@ -37,6 +38,7 @@
 #include <QScrollBar>
 #include <QFileInfo>
 #include <QFileDialog>
+#include <QClipboard>
 #include <QDragEnterEvent>
 #include <QDropEvent>
 #include <QMimeData>
@@ -129,7 +131,18 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
 
 
     // create action components
-    mConvertFileButton = new QPushButton(QIcon(":/res/convert.png"), QString(" ") + tr("&Convert && Save"));
+    QString clipboardActionButtonStyle = "QPushButton {font-weight: bold;}";
+    mClipboardCopyButton = new QPushButton(QIcon(":/res/clipboard-copy.png"), tr("&Load from Clipboard"));
+    mClipboardCopyButton->setToolTip(tr("Load text content from clipboard"));
+    mClipboardCopyButton->setIconSize(QSize(32, 32));
+    mClipboardCopyButton->setStyleSheet(clipboardActionButtonStyle);
+
+    mClipboardPasteButton = new QPushButton(QIcon(":/res/clipboard-paste.png"), tr("Convert to Cli&pboard"));
+    mClipboardPasteButton->setToolTip(tr("Convert text content to clipboard"));
+    mClipboardPasteButton->setIconSize(QSize(32, 32));
+    mClipboardPasteButton->setStyleSheet(clipboardActionButtonStyle);
+
+    mConvertFileButton = new QPushButton(QIcon(":/res/convert.png"), tr("&Convert && Save"));
     mConvertFileButton->setIconSize(QSize(32, 32));
     mConvertFileButton->setStyleSheet("QPushButton {font-size: 16px; font-weight: bold;}");
     mOverwriteCheckBox = new QCheckBox(tr("Overwrite Original File"));
@@ -137,10 +150,11 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     mOverwriteCheckBox->setToolTip(tr("Save converted content to the same file, and overwrite it automatically"));
 
     // add action components to action layout
-    actionLayout->addStretch(1);
     actionLayout->addWidget(mConvertFileButton);
     actionLayout->addWidget(mOverwriteCheckBox);
     actionLayout->addStretch(1);
+    actionLayout->addWidget(mClipboardCopyButton);
+    actionLayout->addWidget(mClipboardPasteButton);
 
     // add tool/main/action layouts to outline layout
     outlineLayout->addLayout(srcFileLayout);
@@ -157,6 +171,9 @@ SingleConvertWidget::SingleConvertWidget(QStatusBar* statusBar, QWidget* parent 
     QObject::connect(mConvertSettings, SIGNAL(settingChanged()), this, SLOT(convertSettingChanged()));
     QObject::connect(mPreviewCheckBox, SIGNAL(toggled(bool)), this, SLOT(previewStateChanged(bool)));
     QObject::connect(mOverwriteCheckBox, SIGNAL(toggled(bool)), this, SLOT(overwriteModeChanged(bool)));
+
+    QObject::connect(mClipboardCopyButton, SIGNAL(clicked(bool)), this, SLOT(loadClipboard()));
+    QObject::connect(mClipboardPasteButton, SIGNAL(clicked(bool)), this, SLOT(convertClipboard()));
 
 
     // post processing
@@ -228,6 +245,22 @@ void SingleConvertWidget::loadFile()
         mStatusBar->showMessage(tr("%1 loaded").arg(mSrcFile));
         mSettings.setValue("SingleMode/LoadDirectory", srcFileInfo.canonicalPath());
     }
+}
+
+void SingleConvertWidget::loadClipboard()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    const QMimeData* mimeData = clipboard->mimeData();
+
+    if (!mimeData->hasText())
+        return;
+
+    QString srcCharset = mSrcCharsetSelector->itemData(mSrcCharsetSelector->currentIndex()).toString();
+    TextLoader loader(mimeData->data("text/plain"), srcCharset);
+    mSrcTextEdit->setPlainText(loader.content());
+
+    mStatusBar->showMessage(tr("Clipboard text loaded"));
+
 }
 
 bool SingleConvertWidget::loadSrcContent()
@@ -339,6 +372,33 @@ void SingleConvertWidget::convertFile()
 
     qint64 totalElapssed = timer.elapsed();
     mStatusBar->showMessage(tr("%1 saved, took %2 secs").arg(mDstFile).arg((float)(totalElapssed/1000.0)));
+
+}
+
+void SingleConvertWidget::convertClipboard()
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    // convert source content to mDstContent
+    this->convertSrcContent();
+
+    // convert mDstContent to final content
+    QString dstCharset = mConvertSettings->getCharset();
+    QByteArray finalContent;
+    if (dstCharset != "UTF-8")
+        finalContent = TextConverter::convertFromUtf8(dstCharset, mDstContent);
+    else
+        finalContent = mDstContent.toUtf8();
+
+    QClipboard *clipboard = QApplication::clipboard();
+    QMimeData* mimeData = new QMimeData();
+    mimeData->setData("text/plain", finalContent);
+    clipboard->clear();
+    clipboard->setMimeData(mimeData, QClipboard::Clipboard);
+
+    qint64 totalElapssed = timer.elapsed();
+    mStatusBar->showMessage(tr("Convert to clipboard, took %1 secs").arg((float)(totalElapssed/1000.0)));
 
 }
 

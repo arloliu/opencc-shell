@@ -29,7 +29,7 @@ CharsetDetector::~CharsetDetector()
         uchardet_delete(mHandle);
 }
 
-QString CharsetDetector::detect(QByteArray& data)
+QString CharsetDetector::detect(const QByteArray& data) const
 {
     uchardet_reset(mHandle);
     uchardet_handle_data(mHandle, data.data(), data.length());

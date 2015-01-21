@@ -14,6 +14,8 @@
         <file>res/remove-all.png</file>
         <file>res/remove.png</file>
         <file>res/text-file.png</file>
+        <file>res/clipboard-copy.png</file>
+        <file>res/clipboard-paste.png</file>
     </qresource>
     <!-- opencc configurations -->
     <qresource prefix="/config">

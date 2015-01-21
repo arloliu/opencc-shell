@@ -66,6 +66,8 @@ private:
     QPlainTextEdit* mDstTextEdit;
     QScrollBar* mDstScrollBar;
 
+    QPushButton* mClipboardCopyButton;
+    QPushButton* mClipboardPasteButton;
     QPushButton* mConvertFileButton;
     QCheckBox* mOverwriteCheckBox;
 
@@ -83,10 +85,12 @@ protected:
 
 private slots:
     void loadFile();
+    void loadClipboard();
     bool loadSrcContent();
     void updateSrcContent();
     void refreshPreview();
     void convertFile();
+    void convertClipboard();
     void convertSettingChanged();
     void previewStateChanged(bool checked);
     void overwriteModeChanged(bool checked);

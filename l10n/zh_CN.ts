@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.1" language="zh_CN">
+<TS version="2.0" language="zh_CN">
 <context>
     <name>BatchConvertWidget</name>
     <message>
@@ -306,105 +306,135 @@
 <context>
     <name>SingleConvertWidget</name>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="58"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="60"/>
         <source>&amp;Open</source>
         <translation>开启(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="65"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="67"/>
         <source>Encoding:</source>
         <translation>编码:</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="68"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="70"/>
         <source>Auto Detect</source>
         <translation>自动侦测</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="98"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="100"/>
         <source>Original Content:</source>
         <translation>源文件案内容:</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="87"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="89"/>
         <source>Preview Converted Result</source>
         <translation>预览转换结果</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="59"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="61"/>
         <source>Open a file which you want to convert</source>
         <translation>开启您想要转换的文件</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="67"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="69"/>
         <source>Select source encoding, choose &apos;Auto Detect&apos; if you don&apos;t know the encoding of source file</source>
         <translation>选择来源文件编码，如果您不确定是哪一种文本编码，请选择&apos;自动侦测&apos;</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="90"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="92"/>
         <source>&amp;Refresh Converted Result</source>
         <translation>更新预览内容(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="91"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="93"/>
         <source>Click it to refresh the converted content when the original content has been modified</source>
         <translation>当您手动更动过左方的文本内容后，请点此更新右方的预览内容</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="119"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="121"/>
         <source>Converted Content:</source>
         <translation>转换结果:</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="132"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="135"/>
+        <source>&amp;Load from Clipboard</source>
+        <translation>加载剪贴板内容(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="136"/>
+        <source>Load text content from clipboard</source>
+        <translation>在加载剪贴板里的文本</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="140"/>
+        <source>Convert to Cli&amp;pboard</source>
+        <translation>转换至剪贴板</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="141"/>
+        <source>Convert text content to clipboard</source>
+        <translation>把内容转换至剪贴板内</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="145"/>
         <source>&amp;Convert &amp;&amp; Save</source>
         <translation>转换并存盘(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="135"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="148"/>
         <source>Overwrite Original File</source>
         <translation>覆写原本的文件</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="137"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="150"/>
         <source>Save converted content to the same file, and overwrite it automatically</source>
         <translation>将转换过的内容覆写至同一个文件</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="204"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="221"/>
         <source>%1 converted, took %2 secs</source>
         <translation>已转换 %1, 花费%2秒</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="210"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="227"/>
         <source>Open Text File</source>
         <translation>开启文本文件</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="228"/>
-        <location filename="../src/SingleConvertWidget.cpp" line="429"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="245"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="489"/>
         <source>%1 loaded</source>
         <translation>已加载 %1</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="298"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="262"/>
+        <source>Clipboard text loaded</source>
+        <translation>已加载剪贴板内容</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="331"/>
         <source>Save File</source>
         <translation>保存文件</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="329"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="362"/>
         <source>Can&apos;t open file: %1</source>
         <translation>%1 无法开启</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="335"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="368"/>
         <source>Can&apos;t save file: %1</source>
         <translation>%1 无法保存</translation>
     </message>
     <message>
-        <location filename="../src/SingleConvertWidget.cpp" line="341"/>
+        <location filename="../src/SingleConvertWidget.cpp" line="374"/>
         <source>%1 saved, took %2 secs</source>
         <translation>已转换并保存 %1, 花费%2秒</translation>
+    </message>
+    <message>
+        <location filename="../src/SingleConvertWidget.cpp" line="401"/>
+        <source>Convert to clipboard, took %1 secs</source>
+        <translation>已将内容转换至剪贴板，花费%1秒</translation>
     </message>
 </context>
 </TS>

@@ -28,7 +28,7 @@ class CharsetDetector
 public:
     CharsetDetector();
     ~CharsetDetector();
-    QString detect(QByteArray& data);
+    QString detect(const QByteArray& data) const;
 
 private:
     uchardet_t mHandle;
