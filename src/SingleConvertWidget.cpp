@@ -259,6 +259,9 @@ void SingleConvertWidget::loadClipboard()
     TextLoader loader(mimeData->data("text/plain"), srcCharset);
     mSrcTextEdit->setPlainText(loader.content());
 
+    this->updateSrcContent();
+    this->previewConvertResult();
+
     mStatusBar->showMessage(tr("Clipboard text loaded"));
 
 }
