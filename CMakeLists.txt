@@ -28,20 +28,13 @@ set(CMAKE_MACOSX_RPATH 1)
 set(OPENCC_SRC_DIR ${CMAKE_SOURCE_DIR}/lib/OpenCC/src)
 set(UCHARDET_SRC_DIR ${CMAKE_SOURCE_DIR}/lib/uchardet/src)
 
-add_definitions(-DOPENCC_OCD_DIR="${CMAKE_INSTALL_PREFIX}/share/opencc")
+add_definitions(-DOPENCC_OCD_DIR="${CMAKE_INSTALL_PREFIX}/share/opencc-shell")
 # QT settings
 if (WITH_QT5)
     find_package(Qt5Widgets REQUIRED)
     find_package(Qt5LinguistTools REQUIRED)
     find_package(Qt5Concurrent REQUIRED)
     set(CMAKE_AUTOMOC ON)
-    #~ include_directories(${Qt5Widgets_INCLUDE_DIRS})
-    #~ include_directories(${Qt5Concurrent_INCLUDE_DIRS})
-    #~ add_definitions(${Qt5Widgets_DEFINITIONS})
-    #~ add_definitions(${Qt5Concurrent_DEFINITIONS})
-    #~ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS} ${Qt5Concurrent_COMPILE_FLAGS}")
-    #~ set(QT_LIBRARIES ${Qt5Widgets_LIBRARIES} ${Qt5Concurrent_LIBRARIES})
-
 else()
     # QT4
     find_package(Qt4 REQUIRED QtCore QtGui)
@@ -59,3 +52,6 @@ add_subdirectory(lib/OpenCC)
 add_subdirectory(lib/uchardet)
 add_subdirectory(src)
 
+# Desktop and icon installation
+install(FILES opencc-shell.desktop DESTINATION share/applications)
+install(FILES src/res/opencc-shell.svg DESTINATION share/pixmaps)

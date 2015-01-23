@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=OpenCC Shell
+Comment=A GUI application for text conversion between traditional and simplified chinese
+Exec=opencc-shell
+Icon=opencc-shell
+Terminal=false
+Categories=GTK;Development;Editors;
+MimeType=text/plain;text/html;text/css;
+StartupNotify=true
