@@ -1,0 +1,36 @@
+Source: opencc-shell
+Section: unknown
+Priority: optional
+Maintainer: Arlo Liu <arlo.liu@gmail.com>
+Build-Depends: debhelper (>= 8.0.0),
+ cmake (>= 2.8.9),
+ libqt4-dev (>= 4:4.8.0),
+ libqt4-dev (>= 4:4.8.0),
+ qtbase5-dev (>= 5.0),
+ qttools5-dev (>= 5.0),
+ qttools5-dev-tools (>= 5.0)
+Standards-Version: 3.9.4
+Homepage: https://github.com/arloliu/opencc-shell
+
+Package: opencc-shell-qt4
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, opencc-shell-data
+Conflicts: opencc-shell-qt5
+Description: OpenCC Shell for qt4
+ A GUI application based on OpenCC library which provides a fast and convenient
+ interface to convert chinese between traditional and simplified chinese.
+
+Package: opencc-shell-qt5
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, opencc-shell-data
+Conflicts: opencc-shell-qt4
+Description: OpenCC Shell for qt4
+ A GUI application based on OpenCC library which provides a fast and convenient
+ interface to convert chinese between traditional and simplified chinese.
+
+Package: opencc-shell-data
+Architecture: all
+Depends: ${misc:Depends}
+Description: OpenCC Shell dictionary and data files
+ A GUI application based on OpenCC library which provides a fast and convenient
+ interface to convert chinese between traditional and simplified chinese.

@@ -1,0 +1,40 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+# This has to be exported to make some magic below work.
+export DH_OPTIONS
+
+CMAKE_OPTIONS = -DCMAKE_BUILD_TYPE=Release
+%:
+	dh $@ --buildsystem=cmake --parallel
+
+override_dh_clean:
+	dh_clean
+	rm -rf debian/tmp-qt4 debian/tmp-qt5
+
+override_dh_auto_clean:
+	dh_auto_clean -Bdebian/build-qt4
+	dh_auto_clean -Bdebian/build-qt5
+
+override_dh_auto_configure:
+	dh_auto_configure -Bdebian/build-qt4 -- -DWITH_QT5=OFF $(CMAKE_OPTIONS)
+	dh_auto_configure -Bdebian/build-qt5 -- -DWITH_QT5=ON $(CMAKE_OPTIONS)
+
+override_dh_auto_build:
+	dh_auto_build -Bdebian/build-qt4
+	dh_auto_build -Bdebian/build-qt5
+
+override_dh_auto_install:
+	dh_auto_install -Bdebian/build-qt4 --destdir=$(CURDIR)/debian/tmp-qt4
+	dh_auto_install -Bdebian/build-qt5 --destdir=$(CURDIR)/debian/tmp-qt5
+
+override_dh_install:
+	dh_install --sourcedir=debian/tmp-qt4 -popencc-shell-qt4
+	dh_install --sourcedir=debian/tmp-qt5 -popencc-shell-qt5
+	dh_install --sourcedir=debian/tmp-qt5 -popencc-shell-data
+
+override_dh_auto_test:
+	# skip auto test
