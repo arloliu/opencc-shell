@@ -81,7 +81,7 @@ if (DEFINED SYSCONF_INSTALL_DIR)
   set (DIR_ETC ${SYSCONF_INSTALL_DIR})
 endif (DEFINED SYSCONF_INSTALL_DIR)
 
-set (DIR_SHARE_OPENCC ${DIR_SHARE}opencc/)
+set (DIR_SHARE_OPENCC ${DIR_SHARE}opencc-shell/)
 set (DIR_SHARE_LOCALE ${DIR_SHARE}locale/)
 
 ######## Compiler flags
