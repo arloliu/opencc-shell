@@ -33,8 +33,6 @@ TextLoader::TextLoader(const QString& fileName, const QString& charset):
     QString type = db.mimeTypeForFile(fileName).name();
     if (type.contains("executable") || type.contains("octet-stream") || type.contains("compressed"))
         return;
-    if (!type.contains("text") && !type.contains("html") && !type.contains("xml"))
-        return;
 #endif
 
     QFile file(fileName);
