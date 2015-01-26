@@ -23,14 +23,13 @@
 #include <QVariant>
 #include <QFileInfo>
 #include <QTextCodec>
-
+#include <QDebug>
 class PersonalSettings
 {
     public:
         explicit PersonalSettings():
             mSettings(QSettings::IniFormat, QSettings::UserScope, "dev-null", "ocs")
         {
-            mSettings.setIniCodec(QTextCodec::codecForName("UTF-8"));
         }
 
         ~PersonalSettings()
